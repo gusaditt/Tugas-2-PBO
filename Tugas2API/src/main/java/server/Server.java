@@ -9,12 +9,14 @@ import java.sql.SQLException;
 
 public class Server implements HttpHandler {
     Response response = new Response();
+    CustomerRequest customerRequest = new CustomerRequest();
     CardsRequest cardsRequest = new CardsRequest();
     itemsRequest itemsRequest = new itemsRequest();
     shippingAddressesRequest shippingAddressesRequest = new shippingAddressesRequest();
     subscriptionItemsRequest subscriptionItemsRequest = new subscriptionItemsRequest();
     subscriptionsRequest subscriptionsRequest = new subscriptionsRequest();
-    String response = null;
+    String responses = null;
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String[] path = exchange.getRequestURI().getPath().split("/");
@@ -22,41 +24,40 @@ public class Server implements HttpHandler {
 
         if ("GET".equals(exchange.getRequestMethod())) {
             if (path.length <= 1) {
-                Response.sendResponse(exchange, 200, "Hello there!");
+                response.sendResponse(exchange, 200, "HAI OGER!");
             }
-            if ("customer".equals(path[1])) {
-                JSONObject jsonUser = null;
+            if ("customers".equals(path[1])) {
+                JSONObject jsonCustomer = null;
                 try {
-                    jsonUser = CustomerRequest.getCustomer(path);
-                    if (jsonUser != null)
-                        Response.getResponse(exchange, jsonUser.toString(), path, "Customer", 200);
+                    jsonCustomer = customerRequest.getCustomer(path);
+                    if (jsonCustomer != null)
+                        response.getResponse(exchange, jsonCustomer.toString(), path, "Customer", 200);
                     else {
-                        Response.sendResponse(exchange, 404, "Not Found");
+                        response.sendResponse(exchange, 404, "Not Found");
                     }
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
-            } else if ("products".equals(path[1])) {
-                JSONObject jsonProduct = null;
+            } else if ("subscriptions".equals(path[1])) {
+                JSONObject jsonSubscriptions = null;
                 try {
-                    jsonProduct = productReqHandler.getProduct(path);
-                    if (jsonProduct != null)
-                        responseHandler.getResponse(exchange, jsonProduct.toString(), path, "products", 200);
+                    jsonSubscriptions = subscriptionsRequest.getSubscriptions(path);
+                    if (jsonSubscriptions != null)
+                        response.getResponse(exchange, jsonSubscriptions.toString(), path, "subscriptions", 200);
                     else {
-                        responseHandler.sendResponse(exchange, 404, "Not Found");
+                        response.sendResponse(exchange, 404, "Not Found");
                     }
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
-            } else if ("orders".equals(path[1])) {
-                JSONObject jsonOrders = null;
+            } else if ("items".equals(path[1])) {
+                JSONObject jsonItems = null;
                 try {
-                    jsonOrders = orderReqHandler.getOrder(path);
-                    if (jsonOrders != null) {
-                        responseHandler.getResponse(exchange, jsonOrders.toString(), path, "orders", 200);
-                    }
+                    jsonItems = itemsRequest.getItems(path);
+                    if (jsonItems != null)
+                        response.getResponse(exchange, jsonItems.toString(), path, "items", 200);
                     else {
-                        responseHandler.sendResponse(exchange, 404, "Not Found");
+                        response.sendResponse(exchange, 404, "Not Found");
                     }
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
@@ -64,159 +65,68 @@ public class Server implements HttpHandler {
             }
         } else if ("POST".equals(exchange.getRequestMethod())) {
             // POST
-            if ("users".equals(path[1])) {
+            if ("customers".equals(path[1])) {
                 JSONObject jsonReqBody = parseRequestBody(exchange.getRequestBody());
                 try {
-                    response = userReqHandler.postUsers(jsonReqBody);
-                    responseHandler.sendResponse(exchange, 200, response);
+                    responses = customerRequest.postCust(jsonReqBody);
+                    response.sendResponse(exchange, 200, responses);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
-            } else if ("addresses".equals(path[1])) {
+            } else if ("items".equals(path[1])) {
                 JSONObject jsonReqBody = parseRequestBody(exchange.getRequestBody());
                 try {
-                    response = addressRequestHandler.postAddresses(jsonReqBody);
-                    responseHandler.sendResponse(exchange, 200, response);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            } else if ("products".equals(path[1])) {
-                JSONObject jsonReqBody = parseRequestBody(exchange.getRequestBody());
-                try {
-                    response = productReqHandler.postProduct(jsonReqBody);
-                    responseHandler.sendResponse(exchange, 200, response);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            } else if ("orders".equals(path[1])) {
-                JSONObject jsonReqBody = parseRequestBody(exchange.getRequestBody());
-                try {
-                    response = orderReqHandler.postOrders(jsonReqBody);
-                    responseHandler.sendResponse(exchange, 200, response);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            } else if ("order_details".equals(path[1])) {
-                JSONObject jsonReqBody = parseRequestBody(exchange.getRequestBody());
-                try {
-                    response = orderReqHandler.postOrderDetails(jsonReqBody);
-                    responseHandler.sendResponse(exchange, 200, response);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            } else if ("reviews".equals(path[1])) {
-                JSONObject jsonReqBody = parseRequestBody(exchange.getRequestBody());
-                try {
-                    response = reviewReqHandler.postReview(jsonReqBody);
-                    responseHandler.sendResponse(exchange, 200, response);
+                    responses = itemsRequest.postItems(jsonReqBody);
+                    response.sendResponse(exchange, 200, responses);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
             } else {
-                response = "404 ENTITY NOT FOUND";
-                responseHandler.sendResponse(exchange, 400, response);
+                responses = "404 ENTITY NOT FOUND";
+                response.sendResponse(exchange, 400, responses);
             }
-        } else if ("PUT".equals(exchange.getRequestMethod())) {
-            if ("users".equals(path[1])) {
+        }
+        else if ("PUT".equals(exchange.getRequestMethod())) {
+            if ("customers".equals(path[1])) {
                 JSONObject jsonReqBody = parseRequestBody(exchange.getRequestBody());
                 try {
-                    response = userReqHandler.putUsers(jsonReqBody, path);
-                    responseHandler.sendResponse(exchange, 200, response);
+                    responses = customerRequest.putCust(jsonReqBody, path);
+                    response.sendResponse(exchange, 200, responses);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
-            } else if ("addresses".equals(path[1])) {
+            } else if ("items".equals(path[1])) {
                 JSONObject jsonReqBody = parseRequestBody(exchange.getRequestBody());
                 try {
-                    response = addressRequestHandler.putAddress(jsonReqBody, path);
-                    responseHandler.sendResponse(exchange, 200, response);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            } else if ("products".equals(path[1])) {
-                JSONObject jsonReqBody = parseRequestBody(exchange.getRequestBody());
-                try {
-                    response = productReqHandler.putProduct(jsonReqBody, path);
-                    responseHandler.sendResponse(exchange, 200, response);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            } else if ("orders".equals(path[1])) {
-                JSONObject jsonReqBody = parseRequestBody(exchange.getRequestBody());
-                try {
-                    response = orderReqHandler.putOrder(jsonReqBody, path);
-                    responseHandler.sendResponse(exchange, 200, response);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            } else if ("order_details".equals(path[1])) {
-                JSONObject jsonReqBody = parseRequestBody(exchange.getRequestBody());
-                try {
-                    response = orderReqHandler.putOrderDetails(jsonReqBody, path);
-                    responseHandler.sendResponse(exchange, 200, response);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            } else if ("reviews".equals(path[1])) {
-                JSONObject jsonReqBody = parseRequestBody(exchange.getRequestBody());
-                try {
-                    response = reviewReqHandler.putReview(jsonReqBody, path);
-                    responseHandler.sendResponse(exchange, 200, response);
+                    responses = itemsRequest.putItems(jsonReqBody, path);
+                    response.sendResponse(exchange, 200, responses);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
             } else {
-                response = "404 ENTITY NOT FOUND";
-                responseHandler.sendResponse(exchange, 400, response);
+                responses = "404 ENTITY NOT FOUND";
+                response.sendResponse(exchange, 400, responses);
             }
-        } else if ("DELETE".equals(exchange.getRequestMethod())) {
+        }
+        else if ("DELETE".equals(exchange.getRequestMethod())) {
             // DELETE
-            if ("users".equals(path[1])) {
+            if ("items".equals(path[1])) {
                 try {
-                    response = userReqHandler.deleteUser(path);
-                    responseHandler.sendResponse(exchange, 200, response);
+                    responses = itemsRequest.deleteItems(path);
+                    response.sendResponse(exchange, 200, responses);
                 } catch (SQLException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
-            } else if ("addresses".equals(path[1])) {
+            }else if ("cards".equals(path[3])) {
                 try {
-                    response = addressRequestHandler.deleteAddress(path);
-                    responseHandler.sendResponse(exchange, 200, response);
-                } catch (SQLException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-            } else if ("products".equals(path[1])) {
-                try {
-                    response = productReqHandler.deleteProduct(path);
-                    responseHandler.sendResponse(exchange, 200, response);
-                } catch (SQLException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-            } else if ("orders".equals(path[1])) {
-                try {
-                    response = orderReqHandler.deleteOrders(path);
-                    responseHandler.sendResponse(exchange, 200, response);
-                } catch (SQLException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-
-            } else if ("order_details".equals(path[1])) {
-                try {
-                    response = orderReqHandler.deleteOrderDetails(path);
-                    responseHandler.sendResponse(exchange, 200, response);
-                } catch (SQLException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-            } else if ("reviews".equals(path[1])) {
-                try {
-                    response = reviewReqHandler.deleteReview(path);
-                    responseHandler.sendResponse(exchange, 200, response);
-                } catch (SQLException | ClassNotFoundException e) {
+                    responses = cardsRequest.deleteCards(path);
+                    response.sendResponse(exchange, 200, responses);
+                } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
             } else {
-                response = "404 ENTITY NOT FOUND";
-                responseHandler.sendResponse(exchange, 400, response);
+                responses = "404 ENTITY NOT FOUND";
+                response.sendResponse(exchange, 400, responses);
             }
         } else { //untuk request method yang tidak disupport
             handleUnsupportedMethod(exchange);
@@ -224,8 +134,8 @@ public class Server implements HttpHandler {
     }
 
     private void handleUnsupportedMethod (HttpExchange exchange) throws IOException {
-        response = "RequestHandler method tidak didukung/tidak ada.";
-        responseHandler.sendResponse(exchange, 405, response);
+        responses = "RequestHandler method tidak ada.";
+        response.sendResponse(exchange, 405, responses);
     }
 
     private JSONObject parseRequestBody(InputStream requestBody) throws IOException {
@@ -233,5 +143,4 @@ public class Server implements HttpHandler {
         String requestBodyString = new String(requestBodyBytes);
         return new JSONObject(requestBodyString);
     }
-
 }
