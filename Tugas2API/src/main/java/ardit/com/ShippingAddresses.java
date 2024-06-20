@@ -1,6 +1,6 @@
 package ardit.com;
 
-public class shippingAddresses {
+public class ShippingAddresses {
 // Variables
     private int id;
     private int customer;
@@ -12,9 +12,9 @@ public class shippingAddresses {
     private String postcode;
 
     // Constructors
-    public shippingAddresses() {}
+    public ShippingAddresses() {}
 
-    public shippingAddresses(int id, int customer, String title, String line1, String line2, String city, String province, String postcode) {
+    public ShippingAddresses(int id, int customer, String title, String line1, String line2, String city, String province, String postcode) {
         this.id = id;
         this.customer = customer;
         this.title = title;
