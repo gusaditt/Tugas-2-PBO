@@ -23,3 +23,8 @@ digunakan untuk menghandle secara keperluan di dalam database.
 
 # PENGGUNAAN PROGRAM
 Program ini menggunakan **port 9057** dan diakses di postman melalui **localhost:9057**
+
+# 1. GET_customers
+**Mendapatkan Data dari Semua Customers**
+https://github.com/gusaditt/Tugas-2-PBO/blob/main/assets/1%20GET%20_customers.png
+diakses dengan 'http://localhost:9057/customers'
