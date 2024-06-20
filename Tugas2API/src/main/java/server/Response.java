@@ -8,7 +8,7 @@ public class Response {
     // Method untuk mendapatkan response header,
     // Mengatur Content type, mengirim respon ke client dan
     // mengatur status code, response length, dan menulis respon ke output stream
-    public static void getResponse(HttpExchange exchange, String jsonObject, String[] path, String table, int statusCode) throws IOException{
+    public void getResponse(HttpExchange exchange, String jsonObject, String[] path, String table, int statusCode) throws IOException{
         OutputStream outputstream = exchange.getResponseBody();
         exchange.getResponseHeaders().set("Content-Type","application/json");
         String response = jsonObject;
@@ -19,7 +19,7 @@ public class Response {
     }
 
     // Method untuk send response
-    public static void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
+    public void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
         OutputStream outputStream = exchange.getResponseBody();
         exchange.sendResponseHeaders(statusCode, response.length());
         outputStream.write(response.getBytes());
