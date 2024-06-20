@@ -2,6 +2,8 @@ package server;
 
 import ardit.com.Cards;
 import ardit.com.Customer;
+import ardit.com.ShippingAddresses;
+import ardit.com.Subscriptions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import persistences.*;
@@ -17,136 +19,188 @@ public class CustomerRequest{
     subscriptionItemsData subscriptionItemsData = new subscriptionItemsData();
     subscriptionsData subscriptionsData = new subscriptionsData();
 
-    // GET USER (Select in Database)
-    public static JSONObject getCustomer(String[] path) throws SQLException {
-        int idUser = 0;
-        JSONObject jsonUser = null;
+    // GET CUSTOMER (Select in Database)
+    public JSONObject getCustomer(String[] path) throws SQLException {
+        int idCustomer = 0;
+        JSONObject jsonCustomer = null;
         if (path.length == 2) {
-            jsonUser = new JSONObject();
-            JSONArray jsonUserArray = new JSONArray();
-            ArrayList<Customer> listUsers = CustomerData.selectAllCustomers();
-            for (Customer user : listUsers) {
-                JSONObject jsonUserRecord = new JSONObject();
-                jsonUserRecord.put("id", user.getId());
-                jsonUserRecord.put("email", user.getEmail());
-                jsonUserRecord.put("first_name", user.getFirst_name());
-                jsonUserRecord.put("last_name", user.getLast_name());
-                jsonUserRecord.put("phone_number", user.getPhone_number());
-                jsonUserArray.put(jsonUserRecord);
+            jsonCustomer = new JSONObject();
+            JSONArray jsonCustomerArray = new JSONArray();
+            ArrayList<Customer> listCustomer = customerData.selectAllCustomers();
+            for (Customer customer : listCustomer) {
+                JSONObject jsonCustomerRecord = new JSONObject();
+                jsonCustomerRecord.put("id", customer.getId());
+                jsonCustomerRecord.put("email", customer.getEmail());
+                jsonCustomerRecord.put("first_name", customer.getFirst_name());
+                jsonCustomerRecord.put("last_name", customer.getLast_name());
+                jsonCustomerRecord.put("phone_number", customer.getPhone_number());
+                jsonCustomerArray.put(jsonCustomerRecord);
             }
-            jsonUser.put("User Record", jsonUserArray);
+            jsonCustomer.put("Customer Record", jsonCustomerArray);
         }
         else if (path.length == 3){
-            jsonUser = new JSONObject();
-            idUser = Integer.valueOf(path[2]);
-            Users user = userDAO.selectUserById(idUser);
-            JSONArray jsonAddressesArray = new JSONArray();
-            ArrayList<Addresses> listAddresses = addressDAO.selectAddressesByUser(idUser);
-            if (user.getId() != 0) {
-                JSONObject jsonUserRecord = new JSONObject();
-                jsonUserRecord.put("id", user.getId());
-                jsonUserRecord.put("first_name", user.getFirst_name());
-                jsonUserRecord.put("last_name", user.getLast_name());
-                jsonUserRecord.put("email", user.getEmail());
-                jsonUserRecord.put("phone_number", user.getPhone_number());
-                for (Addresses address : listAddresses) {
-                    JSONObject jsonAddressRecord = new JSONObject();
-                    jsonAddressRecord.put("user", address.getUser());
-                    jsonAddressRecord.put("type", address.getType());
-                    jsonAddressRecord.put("line1", address.getLine1());
-                    jsonAddressRecord.put("line2", address.getLine2());
-                    jsonAddressRecord.put("city", address.getCity());
-                    jsonAddressRecord.put("province", address.getProvince());
-                    jsonAddressRecord.put("postcode", address.getPostcode());
-                    jsonAddressesArray.put(jsonAddressRecord);
+            jsonCustomer = new JSONObject();
+            idCustomer = Integer.valueOf(path[2]);
+            Customer customer = customerData.selectCustomerById(idCustomer);
+            JSONArray jsonShippingAddressesArray = new JSONArray();
+            ArrayList<ShippingAddresses> listAddresses = shippingAddressesData.selectAddressesByCustomer(idCustomer);
+            if (customer.getId() != 0) {
+                JSONObject jsonCustomerRecord = new JSONObject();
+                jsonCustomerRecord.put("id", customer.getId());
+                jsonCustomerRecord.put("first_name", customer.getFirst_name());
+                jsonCustomerRecord.put("last_name", customer.getLast_name());
+                jsonCustomerRecord.put("email", customer.getEmail());
+                jsonCustomerRecord.put("phone_number", customer.getPhone_number());
+                for (ShippingAddresses address : listAddresses) {
+                    JSONObject jsonShippingAddressesRecord = new JSONObject();
+                    jsonShippingAddressesRecord.put("id", address.getId());
+                    jsonShippingAddressesRecord.put("customer", address.getCustomer());
+                    jsonShippingAddressesRecord.put("title", address.getTitle());
+                    jsonShippingAddressesRecord.put("line1", address.getLine1());
+                    jsonShippingAddressesRecord.put("line2", address.getLine2());
+                    jsonShippingAddressesRecord.put("city", address.getCity());
+                    jsonShippingAddressesRecord.put("province", address.getProvince());
+                    jsonShippingAddressesRecord.put("postcode", address.getPostcode());
+                    jsonShippingAddressesArray.put(jsonShippingAddressesRecord);
                 }
-                jsonUser.put("User Record", jsonUserRecord);
-                jsonUser.put("Addresses Record", jsonAddressesArray);
+                jsonCustomer.put("Customer Record", jsonCustomerRecord);
+                jsonCustomer.put("Shipping Addresses Record", jsonShippingAddressesArray);
             }
         } else if (path.length == 4) {
-            if ("products".equals(path[3])) {
-                jsonUser = new JSONObject();
-                JSONObject jsonProduct = new JSONObject();
-                JSONArray jsonProductArray = new JSONArray();
-                ArrayList<Products> listProducts = productDAO.selectMultiple(path[2]);
-                for (Products product : listProducts) {
-                    JSONObject jsonProductRecord = new JSONObject();
-                    jsonProductRecord.put("id", product.getId());
-                    jsonProductRecord.put("seller", product.getSeller());
-                    jsonProductRecord.put("title", product.getTitle());
-                    jsonProductRecord.put("description", product.getDescription());
-                    jsonProductRecord.put("price", product.getPrice());
-                    jsonProductRecord.put("stock", product.getStock());
-                    jsonProductArray.put(jsonProductRecord);
+            if ("cards".equals(path[3])) {
+                idCustomer = Integer.valueOf(path[2]);
+                jsonCustomer = new JSONObject();
+                JSONObject jsonCards = new JSONObject();
+                JSONArray jsonCardsArray = new JSONArray();
+                ArrayList<Cards> listCards = cardsData.selectCardsByCustomer(idCustomer);
+                for (Cards cards : listCards) {
+                    JSONObject jsonCardsRecord = new JSONObject();
+                    jsonCardsRecord.put("id", cards.getId());
+                    jsonCardsRecord.put("customer", cards.getCustomer());
+                    jsonCardsRecord.put("card", cards.getCard_type());
+                    jsonCardsRecord.put("masked_number", cards.getMasked_number());
+                    jsonCardsRecord.put("expiry_month", cards.getExpiry_month());
+                    jsonCardsRecord.put("expiry_year", cards.getExpiry_year());
+                    jsonCardsRecord.put("status", cards.getStatus());
+                    jsonCardsRecord.put("is_primary", cards.getIs_primary());
+                    jsonCardsArray.put(jsonCardsRecord);
                 }
-                jsonProduct.put("Product Record", jsonProductArray);
-                jsonUser.put("Seller's Product Record", jsonProduct);
-            } else if ("orders".equals(path[3])) {
-                jsonUser = new JSONObject();
-                JSONObject jsonOrders = new JSONObject();
-                idUser = Integer.valueOf(path[2]);
-                JSONArray jsonOrdersArray = new JSONArray();
-                ArrayList<Orders> listOrders = orderDAO.selectOrderById("buyer", idUser);
-                for (Orders order : listOrders) {
-                    JSONObject jsonOrderRecord = new JSONObject();
-                    jsonOrderRecord.put("id", order.getId());
-                    jsonOrderRecord.put("buyer", order.getBuyer());
-                    jsonOrderRecord.put("note", order.getNote());
-                    jsonOrderRecord.put("total", order.getTotal());
-                    jsonOrderRecord.put("discount", order.getDiscount());
-                    jsonOrderRecord.put("is_paid", order.getIs_paid());
-                    jsonOrdersArray.put(jsonOrderRecord);
+                jsonCards.put("Cards Record", jsonCardsArray);
+                jsonCustomer.put("Customer Card Record", jsonCards);
+            } else if ("subscriptions".equals(path[3])) {
+                jsonCustomer = new JSONObject();
+                JSONObject jsonSubscriptions = new JSONObject();
+                idCustomer = Integer.valueOf(path[2]);
+                JSONArray jsonSubscriptionsArray = new JSONArray();
+                ArrayList<Subscriptions> listSubscriptions= subscriptionsData.selectSubscriptionsByCustomer(idCustomer);
+                for (Subscriptions subscriptions : listSubscriptions) {
+                    JSONObject jsonSubscriptionsRecord = new JSONObject();
+                    jsonSubscriptionsRecord.put("id", subscriptions.getId());
+                    jsonSubscriptionsRecord.put("billing_period", subscriptions.getBilling_period());
+                    jsonSubscriptionsRecord.put("billing_period_unit", subscriptions.getBilling_period_unit());
+                    jsonSubscriptionsRecord.put("total_due", subscriptions.getTotal_due());
+                    jsonSubscriptionsRecord.put("actived_at", subscriptions.getActivated_at());
+                    jsonSubscriptionsRecord.put("current_term_start", subscriptions.getCurrent_term_start());
+                    jsonSubscriptionsRecord.put("current_term_end", subscriptions.getCurrent_term_end());
+                    jsonSubscriptionsRecord.put("status", subscriptions.getStatus());
+                    jsonSubscriptionsArray.put(jsonSubscriptionsRecord);
                 }
-                jsonOrders.put("Order Record", jsonOrdersArray);
-                jsonUser.put("Buyer's Order Record", jsonOrders);
-            } else if ("reviews".equals(path[3])) {
-                jsonUser = new JSONObject();
-                JSONObject jsonReviews = new JSONObject();
-                idUser = Integer.valueOf(path[2]);
-                JSONArray jsonReviewsArray = new JSONArray();
-                ArrayList<Reviews> listReviews = reviewDAO.selectReviewById(idUser);
-                for (Reviews review : listReviews) {
-                    JSONObject jsonReviewRecord = new JSONObject();
-                    jsonReviewRecord.put("order", review.getOrder());
-                    jsonReviewRecord.put("star", review.getStar());
-                    jsonReviewRecord.put("description", review.getDescription());
-                    jsonReviewsArray.put(jsonReviewRecord);
+                jsonSubscriptions.put("Subscriptions Record", jsonSubscriptionsArray);
+                jsonCustomer.put("Customer Subscriptions Record", jsonSubscriptions);
+            } else if (path.length == 3 && "subscriptions".equals(path[2])) {
+                jsonCustomer = new JSONObject();
+                JSONObject jsonSubscriptions = new JSONObject();
+                idCustomer = Integer.valueOf(path[1]);
+                JSONArray jsonSubscriptionsArray = new JSONArray();
+                ArrayList<Subscriptions> listSubscriptions= subscriptionsData.selectSubscriptionsByStatus(idCustomer, "active");
+                for (Subscriptions subscriptions : listSubscriptions) {
+                    JSONObject jsonSubscriptionsRecord = new JSONObject();
+                    jsonSubscriptionsRecord.put("id", subscriptions.getId());
+                    jsonSubscriptionsRecord.put("customer", subscriptions.getCustomer());
+                    jsonSubscriptionsRecord.put("billing_period", subscriptions.getBilling_period());
+                    jsonSubscriptionsRecord.put("billing_period_unit", subscriptions.getBilling_period_unit());
+                    jsonSubscriptionsRecord.put("total_due", subscriptions.getTotal_due());
+                    jsonSubscriptionsRecord.put("actived_at", subscriptions.getActivated_at());
+                    jsonSubscriptionsRecord.put("current_term_start", subscriptions.getCurrent_term_start());
+                    jsonSubscriptionsRecord.put("current_term_end", subscriptions.getCurrent_term_end());
+                    jsonSubscriptionsRecord.put("status", subscriptions.getStatus());
+                    jsonSubscriptionsArray.put(jsonSubscriptionsRecord);
                 }
-                jsonReviews.put("Review Record", jsonReviewsArray);
-                jsonUser.put("Buyer's Reviews Record", jsonReviews);
+                jsonSubscriptions.put("Subscriptions Record", jsonSubscriptionsArray);
+                jsonCustomer.put("Customer Subscriptions Record", jsonSubscriptions);
+            }else if (path.length == 3 && "subscriptions".equals(path[2])) {
+                jsonCustomer = new JSONObject();
+                JSONObject jsonSubscriptions = new JSONObject();
+                idCustomer = Integer.valueOf(path[1]);
+                JSONArray jsonSubscriptionsArray = new JSONArray();
+                ArrayList<Subscriptions> listSubscriptions= subscriptionsData.selectSubscriptionsByStatus(idCustomer, "cancelled");
+                for (Subscriptions subscriptions : listSubscriptions) {
+                    JSONObject jsonSubscriptionsRecord = new JSONObject();
+                    jsonSubscriptionsRecord.put("id", subscriptions.getId());
+                    jsonSubscriptionsRecord.put("customer", subscriptions.getCustomer());
+                    jsonSubscriptionsRecord.put("billing_period", subscriptions.getBilling_period());
+                    jsonSubscriptionsRecord.put("billing_period_unit", subscriptions.getBilling_period_unit());
+                    jsonSubscriptionsRecord.put("total_due", subscriptions.getTotal_due());
+                    jsonSubscriptionsRecord.put("actived_at", subscriptions.getActivated_at());
+                    jsonSubscriptionsRecord.put("current_term_start", subscriptions.getCurrent_term_start());
+                    jsonSubscriptionsRecord.put("current_term_end", subscriptions.getCurrent_term_end());
+                    jsonSubscriptionsRecord.put("status", subscriptions.getStatus());
+                    jsonSubscriptionsArray.put(jsonSubscriptionsRecord);
+                }
+                jsonSubscriptions.put("Subscriptions Record", jsonSubscriptionsArray);
+                jsonCustomer.put("Customer Subscriptions Record", jsonSubscriptions);
+            }else if (path.length == 3 && "subscriptions".equals(path[2])) {
+                jsonCustomer = new JSONObject();
+                JSONObject jsonSubscriptions = new JSONObject();
+                idCustomer = Integer.valueOf(path[2]);
+                JSONArray jsonSubscriptionsArray = new JSONArray();
+                ArrayList<Subscriptions> listSubscriptions= subscriptionsData.selectSubscriptionsByStatus(idCustomer, "non-renewing");
+                for (Subscriptions subscriptions : listSubscriptions) {
+                    JSONObject jsonSubscriptionsRecord = new JSONObject();
+                    jsonSubscriptionsRecord.put("id", subscriptions.getId());
+                    jsonSubscriptionsRecord.put("customer", subscriptions.getCustomer());
+                    jsonSubscriptionsRecord.put("billing_period", subscriptions.getBilling_period());
+                    jsonSubscriptionsRecord.put("billing_period_unit", subscriptions.getBilling_period_unit());
+                    jsonSubscriptionsRecord.put("total_due", subscriptions.getTotal_due());
+                    jsonSubscriptionsRecord.put("actived_at", subscriptions.getActivated_at());
+                    jsonSubscriptionsRecord.put("current_term_start", subscriptions.getCurrent_term_start());
+                    jsonSubscriptionsRecord.put("current_term_end", subscriptions.getCurrent_term_end());
+                    jsonSubscriptionsRecord.put("status", subscriptions.getStatus());
+                    jsonSubscriptionsArray.put(jsonSubscriptionsRecord);
+                }
+                jsonSubscriptions.put("Subscriptions Record", jsonSubscriptionsArray);
+                jsonCustomer.put("Customer Subscriptions Record", jsonSubscriptions);
             }
         }
-        return jsonUser;
+        return jsonCustomer;
     }
 
-    // POST USER (INSERT in Database)
-    public String postUsers(JSONObject jsonReqBody) throws SQLException {
-        Users user = userParseJSONData(jsonReqBody);
-        return userDAO.addNewUser(user);
+    // POST CUSTOMERS (INSERT in Database)
+    public String postCust(JSONObject jsonReqBody) throws SQLException {
+        Customer customer = userParseJSONData(jsonReqBody);
+        return customerData.addNewCustomer(customer);
     }
 
-    // PUT USER (UPDATE in database)
-    public String putUsers (JSONObject jsonReqBody, String[] path) throws SQLException {
-        Users user = userParseJSONData(jsonReqBody);
-        int idUser = Integer.valueOf(path[2]);
-
-        return userDAO.updateUser(user, idUser);
+    // PUT CUSTOMERS (UPDATE in database)
+    public String putCust(JSONObject jsonReqBody, String[] path) throws SQLException {
+        Customer customer = userParseJSONData(jsonReqBody);
+        int idCustomer = Integer.valueOf(path[2]);
+        return customerData.updateCustomer(customer);
     }
-    private Users userParseJSONData (JSONObject jsonReqBody) {
-        Users user = new Users();
+    private Customer userParseJSONData (JSONObject jsonReqBody) {
+        Customer customer = new Customer();
         System.out.println("Getting data from request");
-        user.setId(jsonReqBody.optInt("id"));
-        user.setFirst_name(jsonReqBody.optString("first_name"));
-        user.setLast_name(jsonReqBody.optString("last_name"));
-        user.setEmail(jsonReqBody.optString("email"));
-        user.setPhone_number(jsonReqBody.optString("phone_number"));
-        user.setType(jsonReqBody.optString("type"));
+        customer.setId(jsonReqBody.optInt("id"));
+        customer.setFirst_name(jsonReqBody.optString("first_name"));
+        customer.setLast_name(jsonReqBody.optString("last_name"));
+        customer.setEmail(jsonReqBody.optString("email"));
+        customer.setPhone_number(jsonReqBody.optString("phone_number"));
 
-        return user;
+        return customer;
     }
-    // DELETE USER
-    public String deleteUser(String[] path) throws SQLException, ClassNotFoundException {
-        int idUser = Integer.valueOf(path[2]);
-        return userDAO.deleteUser(idUser);
+    // DELETE CUSTOMERS
+    public String deleteCust(String[] path) throws SQLException, ClassNotFoundException {
+        int idCustomer = Integer.valueOf(path[2]);
+        return customerData.deleteCustomer(idCustomer);
     }
 }
