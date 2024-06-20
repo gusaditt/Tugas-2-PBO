@@ -7,11 +7,11 @@ Proyek ini adalah sebuah backend API sederhana yang dibangun menggunakan Java de
 # STRUKTUR PROGRAM
 Proyek ini memiliki **3 FOLDER** atau **STRUKTUR utamanya**.
 ## main/java
--**ardit/com**
+**ardit/com**
 digunakan untuk menyimpan segala entitas yang terdapat pada database.
--**server**
+**server**
 digunakan untuk menghandle segala sesuatu yang berhubungan dengan keperluan untuk API dan SERVER.
--**persistences**
+**persistences**
 digunakan untuk menghandle secara keperluan di dalam database.
 
 # SPESIFIKASI PROGRAM
