@@ -1,6 +1,6 @@
 package ardit.com;
 
-public class subscriptionItems {
+public class SubscriptionItems {
     // Variables
     private int subscription;
     private int item;
@@ -9,9 +9,9 @@ public class subscriptionItems {
     private int amount;
 
     // Constructors
-    public subscriptionItems() {}
+    public SubscriptionItems() {}
 
-    public subscriptionItems(int subscription, int item, int quantity, int price, int amount) {
+    public SubscriptionItems(int subscription, int item, int quantity, int price, int amount) {
         this.subscription = subscription;
         this.item = item;
         this.quantity = quantity;
