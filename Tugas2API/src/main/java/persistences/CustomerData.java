@@ -270,46 +270,46 @@ public class CustomerData {
         return response;
     }
 
-    // DELETE CUSTOMER BY ID
-    public String deleteCustomer(int idCustomer) throws SQLException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        String response;
+// DELETE CUSTOMER BY ID
+public String deleteCustomer(int idCustomer) throws SQLException {
+    Connection connection = null;
+    PreparedStatement statement = null;
+    String response;
 
-        try {
-            Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:subscription.db");
-            System.out.println("Connected to database");
+    try {
+        Class.forName("org.sqlite.JDBC");
+        connection = DriverManager.getConnection("jdbc:sqlite:subscription.db");
+        System.out.println("Connected to database");
 
-            // Delete related cards first (assuming there is a foreign key constraint with CASCADE delete)
-            statement = connection.prepareStatement("DELETE FROM cards WHERE customer = ?");
-            statement.setInt(1, idCustomer);
-            statement.executeUpdate();
+        // Delete related cards first (assuming there is a foreign key constraint with CASCADE delete)
+        statement = connection.prepareStatement("DELETE FROM cards WHERE customer = ?");
+        statement.setInt(1, idCustomer);
+        statement.executeUpdate();
 
-            // Delete related subscriptions first (assuming there is a foreign key constraint with CASCADE delete)
-            statement = connection.prepareStatement("DELETE FROM subscriptions WHERE customer = ?");
-            statement.setInt(1, idCustomer);
-            statement.executeUpdate();
+        // Delete related subscriptions first (assuming there is a foreign key constraint with CASCADE delete)
+        statement = connection.prepareStatement("DELETE FROM subscriptions WHERE customer = ?");
+        statement.setInt(1, idCustomer);
+        statement.executeUpdate();
 
-            // Now delete the customer record
-            statement = connection.prepareStatement("DELETE FROM customers WHERE id = ?");
-            statement.setInt(1, idCustomer);
+        // Now delete the customer record
+        statement = connection.prepareStatement("DELETE FROM customers WHERE id = ?");
+        statement.setInt(1, idCustomer);
 
-            int rowsAffected = statement.executeUpdate();
-            if (rowsAffected > 0) {
-                response = rowsAffected + " row(s) have been affected";
-                System.out.println(response);
-            } else {
-                response = "No rows have been affected";
-                System.out.println(response);
-            }
-        } catch (SQLException | ClassNotFoundException e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            throw new RuntimeException(e);
-        } finally {
-            if (statement != null) statement.close();
-            if (connection != null) connection.close();
+        int rowsAffected = statement.executeUpdate();
+        if (rowsAffected > 0) {
+            response = rowsAffected + " row(s) have been affected";
+            System.out.println(response);
+        } else {
+            response = "No rows have been affected";
+            System.out.println(response);
         }
-        return response;
+    } catch (SQLException | ClassNotFoundException e) {
+        System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        throw new RuntimeException(e);
+    } finally {
+        if (statement != null) statement.close();
+        if (connection != null) connection.close();
     }
+    return response;
+}
 }
