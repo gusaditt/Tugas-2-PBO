@@ -1,17 +1,18 @@
 package persistences;
 
-import ardit.com.subscriptionItems;
+import ardit.com.SubscriptionItems;
 
 import java.sql.*;
 import java.util.ArrayList;
 
 public class subscriptionItemsData {
- // SELECT SUBSCRIPTION ITEMS BY SUBSCRIPTION ID
-    public ArrayList<subscriptionItems> selectItemsBySubscription(int idSubscription) throws SQLException {
+
+    // SELECT SUBSCRIPTION ITEMS BY SUBSCRIPTION ID
+    public ArrayList<SubscriptionItems> selectItemsBySubscription(int idSubscription) throws SQLException {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
-        ArrayList<subscriptionItems> itemList = new ArrayList<>();
+        ArrayList<SubscriptionItems> itemList = new ArrayList<>();
 
         try {
             Class.forName("org.sqlite.JDBC");
@@ -23,7 +24,7 @@ public class subscriptionItemsData {
             result = statement.executeQuery();
 
             while(result.next()) {
-                subscriptionItems item = new subscriptionItems();
+                SubscriptionItems item = new SubscriptionItems();
                 item.setSubscription(result.getInt("subscription"));
                 item.setItem(result.getInt("item"));
                 item.setQuantity(result.getInt("quantity"));
@@ -43,7 +44,7 @@ public class subscriptionItemsData {
     }
 
     // INSERT NEW SUBSCRIPTION ITEM
-    public String addNewSubscriptionItem(subscriptionItems item) throws SQLException {
+    public String addNewSubscriptionItem(SubscriptionItems item) throws SQLException {
         Connection connection = null;
         PreparedStatement statement = null;
         String response;
@@ -80,7 +81,7 @@ public class subscriptionItemsData {
     }
 
     // UPDATE SUBSCRIPTION ITEM BASED ON SUBSCRIPTION AND ITEM ID
-    public String updateSubscriptionItem(subscriptionItems item, int idSubscription, int idItem) throws SQLException {
+    public String updateSubscriptionItem(SubscriptionItems item, int idSubscription, int idItem) throws SQLException {
         Connection connection = null;
         PreparedStatement statement = null;
         String response;
