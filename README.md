@@ -24,65 +24,85 @@ digunakan untuk menghandle secara keperluan di dalam database.
 # PENGGUNAAN PROGRAM
 Program ini menggunakan **port 9057** dan diakses di postman melalui **localhost:9057**
 
-# 1. GET_customers
+# GET_customers
 **Mendapatkan Data dari Semua Customers**
-![1 GET _customers](https://github.com/gusaditt/Tugas-2-PBO/assets/147296239/25e71a2c-4826-4248-8a40-f71ba770a5b2)
+![1 GET _customers](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/92415005-a298-478e-8a15-bf350097096a)
 diakses dengan 'http://localhost:9057/customers'
 
-# 2. GET_customers_{id}
+# GET_customers_{id}
 **Mendapatkan Data dari Customer berdasarkan ID**
-![2 GET _customers_{id}](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/2eadfa64-1685-46e4-aa37-6e245f4483d4)
+![2 GET _customers_{id}](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/731aa2ec-9d42-4803-b909-4b121f3c5b48)
 diakses dengan 'http://localhost:9057/customers/1'
 
-# 3. GET_customer_{id}_cards
+# GET_customer_{id}_cards
 **Mendapatkan Informasi Kartu Pelanggan berdasarkan ID**
-![3 GET _customers_{id}_cards](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/c0219ec7-43a2-4715-a013-e5774191b5e1)
+![3  GET _customers_{id}_cards](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/c0ba6897-c963-4f7b-9eba-a06b821a5c70)
 diakses dengan 'http://localhost:9057/customers/1/cards'
 
-# 4. GET_customer_{id}_subscriptions
+# GET_customer_{id}_subscriptions
 **Mendapatkan Informasi Mengenai daftar Subscriptions Milik Pelanggan**
-![4 GET _customers_{id}_subscriptions](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/93c15642-48f1-4d3d-be87-45867a133a2d)
+![4 GET _customers_{id}_subscriptions](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/eb098ba4-2170-434f-9f09-0d85e13aceed)
 diakses dengan 'http://localhost:9057/customers/3/subscriptions'
 
-# 6. GET_subscriptions
+# GET_customer_{id}_subscriptions?subscriptions_status
+**Mendapatkan Informasi Mengenai Subscriptions Status Milik Pelanggan berdasarkan ID Customer**
+![5 GET _customers_{id}_subscriptions_subscriptions_status](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/b2f71f1b-bea2-4cf8-9c89-1f0a2d736a80)
+diakses dengan 'http://localhost:9057/customers/1/subscriptions?subscription_status=active'
+
+# GET_subscriptions
 **Mendapatkan Data dari Semua Subscriptions**
-![6 GET _subscriptions](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/716f8180-d299-4e0a-88cf-fcd485185cb8)
+![6 GET _subscriptions ](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/e2962f1d-3f43-48f5-b455-5488ac60297b)
 diakses dengan 'http://localhost:9057/subscriptions'
 
-# 9. GET_items
+# GET_subscriptions?sort_by=current_term_end&sort_type=desc
+**Mendapatkan Daftar Subscriptions yang Diurutkan Berdasarkan Tanggal Akhir Periode Berjalan dalam Urutan Menurun**
+![8 GET _subscriptions_sort_by=current_term_end sort_type=desc](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/1ee7d7ce-4f78-4228-a2a9-fa1127598e66)
+diakses dengan 'http://localhost:9057/subscriptions?sort_by=current_term_end&sort_type=desc'
+
+# GET_items
 **Mendapatkan Data dari Semua Items**
-![9 GET _items](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/cb3e56bd-f6f6-4cab-bf71-cc0e70adea9c)
+![9 GET _items](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/ca4b2605-4d50-458d-8766-8cb8146b55a5)
 diakses dengan 'http://localhost:9057/items'
 
-# 11. GET_items_{id}
+# GET /items?is_active=true
+**Mendapatkan Daftar Semua Items yang Memiliki Status Aktif (is_active)**
+![10 GET _items_is_active=true ](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/2bd63fa9-4379-4156-9e7d-4ca8ffe8aaa7)
+diakses dengan 'http://localhost:9057/items?is_active=true'
+
+# GET_items_{id}
 **Mendapatkan Data dari Items berdasarkan ID**
-![11 GET _items_{id}](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/d64f09aa-2d4b-47c1-92e9-d006a3ba7029)
+![11 GET _items_{id}](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/46f7cbea-ffbd-4721-9f32-bd84b1a1a6b3)
 diakses dengan 'http://localhost:9057/items/1'
 
-# 12. POST_customers
+# POST_customers
 **Membuat Data Baru pada Customers**
-![12 POST _customers](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/58b24e96-cdf3-48ac-a33a-8f91bf196125)
+![12 POST _customers](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/48ce3b49-a1d6-417b-bf62-e25100c73a14)
 diakses dengan 'http://localhost:9057/customers'
 
-# 14. POST_items
+# POST_subscriptions 
+**Membuat Data Baru pada Subscriptions**
+![13 POST _subscriptions ](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/97436f37-a9fb-4c81-b28a-46909a693608)
+diakses dengan 'http://localhost:9057/subscriptions'
+
+# POST_items
 **Membuat Data Baru pada Items**
-![14 POST _items](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/5ed1ef27-1ca7-46d9-9a5c-460bfcda7e2f)
+![14 POST _items](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/209cef8b-425f-4a03-8c7d-d22e4f0cc81f)
 diakses dengan 'http://localhost:9057/items'
 
-# 15. PUT_customers_{id}
+# PUT_customers_{id}
 **Merubah Data pada Customer**
-![15 PUT _customers_{id}](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/e743d610-8bb5-42ce-923b-77fc080a207f)
+![15 PUT _customers_{id}](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/3469c0c3-2569-4c5d-9085-1fe4ddfa85df)
 diakses dengan 'http://localhost:9057/customers/1'
 
-# 17. PUT_items_{id}
+# PUT_items_{id}
 **Merubah Data pada Items**
-![17 PUT _items_{id}](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/40c831d5-7e11-4a84-a9bd-b0449163da89)
+![17 PUT _items_{id}](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/fd9aa6ee-972e-4ad8-8d20-9d1862e6f922)
 diakses dengan 'http://localhost:9057/items/7'
 
-# 18. DELETE_items{id}
-![18 DELETE _items_{id}](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/0cc38a24-8892-4db3-abd5-339f7490bff4)
+# DELETE_items{id}
+![18 DELETE _items_{id}](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/60eded91-ba21-47a2-8207-54a67d040cb2)
 diakses dengan 'http://localhost:9057/items/2'
 
-# 19. DELETE_customers_{id}_cards_{id}
-![19 DELETE _customers_{id}_cards_{id}](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/1fe378e4-7d7a-4365-a4b9-e8890e223407)
+# DELETE_customers_{id}_cards_{id}
+![19 DELETE _customers_{id}_cards_{id}](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/c6179074-eda4-4d14-98a5-58fdddcf0233)
 diakses dengan 'http://localhost:9057/customers/4/cards/4'
