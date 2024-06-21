@@ -107,7 +107,7 @@ public class CustomerRequest{
                 }
                 jsonSubscriptions.put("Subscriptions Record", jsonSubscriptionsArray);
                 jsonCustomer.put("Customer Subscriptions Record", jsonSubscriptions);
-            } else if (path.length == 3 && "subscriptions".equals(path[2])) {
+            } else if ("subscriptions?subscriptions_status=active".equals(path[2])) {
                 jsonCustomer = new JSONObject();
                 JSONObject jsonSubscriptions = new JSONObject();
                 idCustomer = Integer.valueOf(path[1]);
@@ -128,7 +128,7 @@ public class CustomerRequest{
                 }
                 jsonSubscriptions.put("Subscriptions Record", jsonSubscriptionsArray);
                 jsonCustomer.put("Customer Subscriptions Record", jsonSubscriptions);
-            }else if (path.length == 3 && "subscriptions".equals(path[2])) {
+            }else if ("subscriptions?subscriptions_status=cancelled".equals(path[2])) {
                 jsonCustomer = new JSONObject();
                 JSONObject jsonSubscriptions = new JSONObject();
                 idCustomer = Integer.valueOf(path[1]);
@@ -149,7 +149,7 @@ public class CustomerRequest{
                 }
                 jsonSubscriptions.put("Subscriptions Record", jsonSubscriptionsArray);
                 jsonCustomer.put("Customer Subscriptions Record", jsonSubscriptions);
-            }else if (path.length == 3 && "subscriptions".equals(path[2])) {
+            }else if ("subscriptions?subscriptions_status=non-renewing".equals(path[2])) {
                 jsonCustomer = new JSONObject();
                 JSONObject jsonSubscriptions = new JSONObject();
                 idCustomer = Integer.valueOf(path[2]);
