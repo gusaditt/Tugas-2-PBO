@@ -1,6 +1,7 @@
 package ardit.com;
 
 public class Customer {
+
     // Variables
     private int id;
     private String email;
@@ -57,4 +58,3 @@ public class Customer {
         this.phone_number = phone_number;
     }
 }
-
