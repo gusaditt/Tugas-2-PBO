@@ -6,6 +6,44 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class itemsData {
+    public ArrayList<Items> selectItemsByActiveStatus() throws SQLException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet result = null;
+        ArrayList<Items> itemList = new ArrayList<>();
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+            // Establish connection to SQLite database
+            connection = DriverManager.getConnection("jdbc:sqlite:subscription.db");
+            System.out.println("Connected to database");
+
+            // SQL query based on isActive parameter
+            String sql = "SELECT * FROM items WHERE is_active = 1";
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, 1); // 1 for true (active), 0 for false (inactive)
+
+            result = statement.executeQuery();
+
+            while(result.next()) {
+                Items item = new Items();
+                item.setId(result.getInt("id"));
+                item.setName(result.getString("name"));
+                item.setPrice(result.getInt("price"));
+                item.setType(result.getString("type"));
+                item.setIs_active(result.getInt("is_active"));
+                itemList.add(item);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            throw new RuntimeException(e);
+        } finally {
+            if (result != null) result.close();
+            if (statement != null) statement.close();
+            if (connection != null) connection.close();
+        }
+        return itemList;
+    }
     // SELECT ALL ITEMS
     public ArrayList<Items> selectAllItems() throws SQLException {
         Connection connection = null;
