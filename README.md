@@ -28,3 +28,9 @@ Program ini menggunakan **port 9057** dan diakses di postman melalui **localhost
 **Mendapatkan Data dari Semua Customers**
 ![1 GET _customers](https://github.com/gusaditt/Tugas-2-PBO/assets/147296239/25e71a2c-4826-4248-8a40-f71ba770a5b2)
 diakses dengan 'http://localhost:9057/customers'
+
+# 2. GET_customers_{id}
+**Mendapatkan Data dari Customer berdasarkan ID**
+![2 GET _customers_{id}](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/2eadfa64-1685-46e4-aa37-6e245f4483d4)
+diakses dengan '''http://localhost:9057/customers/1'''
+
