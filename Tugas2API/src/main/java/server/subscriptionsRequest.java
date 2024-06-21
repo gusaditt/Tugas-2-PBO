@@ -1,5 +1,9 @@
 package server;
 
+import java.util.Map;
+import java.util.HashMap;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import ardit.com.Cards;
 import ardit.com.Customer;
 import ardit.com.Items;
@@ -20,31 +24,19 @@ public class subscriptionsRequest {
     subscriptionsData subscriptionsData = new subscriptionsData();
 
     // GET SUBSCRIPTIONS (Select in Database)
-    public JSONObject getSubscriptions(String[] path) throws SQLException {
-        int idCustomer = 0;
-        JSONObject jsonSubscriptions = null;
-        if (path.length == 2) {
-            if(path[1].equals("subscriptions")){
-                jsonSubscriptions = new JSONObject();
-                JSONArray jsonSubscriptionsArray = new JSONArray();
-                ArrayList<Subscriptions> listSubscriptions = subscriptionsData.selectAllSubscriptions();
-                for (Subscriptions subscriptions : listSubscriptions) {
-                    JSONObject jsonSubscriptionsRecord = new JSONObject();
-                    jsonSubscriptionsRecord.put("id", subscriptions.getId());
-                    jsonSubscriptionsRecord.put("customer", subscriptions.getCustomer());
-                    jsonSubscriptionsRecord.put("billing_period", subscriptions.getBilling_period());
-                    jsonSubscriptionsRecord.put("billing_period_unit", subscriptions.getBilling_period_unit());
-                    jsonSubscriptionsRecord.put("total_due", subscriptions.getTotal_due());
-                    jsonSubscriptionsRecord.put("actived_at", subscriptions.getActivated_at());
-                    jsonSubscriptionsRecord.put("current_term_start", subscriptions.getCurrent_term_start());
-                    jsonSubscriptionsRecord.put("current_term_end", subscriptions.getCurrent_term_end());
-                    jsonSubscriptionsRecord.put("status", subscriptions.getStatus());
-                    jsonSubscriptionsArray.put(jsonSubscriptionsRecord);
-                }
-                jsonSubscriptions.put("Subscriptions Record", jsonSubscriptionsArray);
-            }else if(path[1].equals("subscriptions?sort_by=current_term_end&sort_type=desc")){
-                jsonSubscriptions = new JSONObject();
-                JSONArray jsonSubscriptionsArray = new JSONArray();
+    public JSONObject getSubscriptions(String query,String[] path) throws SQLException {
+        JSONObject jsonSubscriptions = new JSONObject();
+        JSONArray jsonSubscriptionsArray = new JSONArray();
+
+        if (query != null && !query.isEmpty()) {
+            // Parsing query parameters
+            Map<String, String> queryParams = parseQueryParams(query);
+
+            String sortBy = queryParams.get("sort_by");
+            String sortType = queryParams.get("sort_type");
+
+            if ("current_term_end".equals(sortBy) && "desc".equals(sortType)) {
+                // Fetch sorted subscriptions
                 ArrayList<Subscriptions> listSubscriptions = subscriptionsData.selectSortSubscription();
                 for (Subscriptions subscriptions : listSubscriptions) {
                     JSONObject jsonSubscriptionsRecord = new JSONObject();
@@ -59,9 +51,28 @@ public class subscriptionsRequest {
                     jsonSubscriptionsRecord.put("status", subscriptions.getStatus());
                     jsonSubscriptionsArray.put(jsonSubscriptionsRecord);
                 }
-                jsonSubscriptions.put("Subscriptions Record", jsonSubscriptionsArray);
+            } else {
+                throw new IllegalArgumentException("Invalid query parameters");
+            }
+        } else {
+            // Fetch all subscriptions if no query parameters are provided
+            ArrayList<Subscriptions> listSubscriptions = subscriptionsData.selectAllSubscriptions();
+            for (Subscriptions subscriptions : listSubscriptions) {
+                JSONObject jsonSubscriptionsRecord = new JSONObject();
+                jsonSubscriptionsRecord.put("id", subscriptions.getId());
+                jsonSubscriptionsRecord.put("customer", subscriptions.getCustomer());
+                jsonSubscriptionsRecord.put("billing_period", subscriptions.getBilling_period());
+                jsonSubscriptionsRecord.put("billing_period_unit", subscriptions.getBilling_period_unit());
+                jsonSubscriptionsRecord.put("total_due", subscriptions.getTotal_due());
+                jsonSubscriptionsRecord.put("actived_at", subscriptions.getActivated_at());
+                jsonSubscriptionsRecord.put("current_term_start", subscriptions.getCurrent_term_start());
+                jsonSubscriptionsRecord.put("current_term_end", subscriptions.getCurrent_term_end());
+                jsonSubscriptionsRecord.put("status", subscriptions.getStatus());
+                jsonSubscriptionsArray.put(jsonSubscriptionsRecord);
             }
         }
+
+        jsonSubscriptions.put("Subscriptions Record", jsonSubscriptionsArray);
         return jsonSubscriptions;
     }
     // POST SUBSCRIPTIONS (INSERT in Database)
@@ -93,5 +104,17 @@ public class subscriptionsRequest {
     public String deleteCust(String[] path) throws SQLException, ClassNotFoundException {
         int idItems = Integer.valueOf(path[2]);
         return itemsData.deleteItem(idItems);
+    }
+    private Map<String, String> parseQueryParams(String query) {
+        Map<String, String> queryPairs = new HashMap<>();
+        String[] pairs = query.split("&");
+        for (String pair : pairs) {
+            int idx = pair.indexOf("=");
+            queryPairs.put(
+                    URLDecoder.decode(pair.substring(0, idx), StandardCharsets.UTF_8),
+                    URLDecoder.decode(pair.substring(idx + 1), StandardCharsets.UTF_8)
+            );
+        }
+        return queryPairs;
     }
 }
