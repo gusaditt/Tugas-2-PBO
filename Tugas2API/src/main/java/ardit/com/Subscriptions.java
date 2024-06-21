@@ -4,16 +4,17 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Subscriptions {
- // Variables
+
+    // Variables
     private int id;
     private int customer;
     private int billing_period;
     public enum BillingPeriodUnit { MONTH, YEAR }
     private BillingPeriodUnit billing_period_unit;
     private int total_due;
-    private LocalDateTime activated_at;
-    private LocalDateTime current_term_start;
-    private LocalDateTime current_term_end;
+    private int activated_at;
+    private String current_term_start;
+    private String current_term_end;
     public enum Status { ACTIVE, CANCELLED, NON_RENEWING }
     private Status status;
 
@@ -23,16 +24,15 @@ public class Subscriptions {
     // Constructors
     public Subscriptions() {}
 
-    public Subscriptions(int id, int customer, int billing_period, String billing_period_unit, int total_due, String activated_at, String current_term_start, String current_term_end, String status) {
+    public Subscriptions(int id, int customer, int billing_period,Subscriptions.BillingPeriodUnit billing_period_unit, int total_due, int activated_at, String current_term_start, String current_term_end, String status) {
         this.id = id;
         this.customer = customer;
         this.billing_period = billing_period;
-        this.billing_period_unit = BillingPeriodUnit.valueOf(billing_period_unit.toUpperCase());
+        this.billing_period_unit = billing_period_unit;
         this.total_due = total_due;
-        this.activated_at = LocalDateTime.parse(activated_at, formatter);
-        this.current_term_start = LocalDateTime.parse(current_term_start, formatter);
-        this.current_term_end = LocalDateTime.parse(current_term_end, formatter);
-        this.status = Status.valueOf(status.toUpperCase());
+        this.activated_at = activated_at;
+        this.current_term_start = current_term_start;
+        this.current_term_end = current_term_end;
     }
 
     // Getter and Setter methods
@@ -76,28 +76,28 @@ public class Subscriptions {
         this.total_due = total_due;
     }
 
-    public LocalDateTime getActivated_at() {
+    public int getActivated_at() {
         return activated_at;
     }
 
-    public void setActivated_at(String activated_at) {
-        this.activated_at = LocalDateTime.parse(activated_at, formatter);
+    public void setActivated_at(int activated_at) {
+        this.activated_at = activated_at;
     }
 
-    public LocalDateTime getCurrent_term_start() {
+    public String getCurrent_term_start() {
         return current_term_start;
     }
 
     public void setCurrent_term_start(String current_term_start) {
-        this.current_term_start = LocalDateTime.parse(current_term_start, formatter);
+        this.current_term_start = current_term_start;
     }
 
-    public LocalDateTime getCurrent_term_end() {
+    public String getCurrent_term_end() {
         return current_term_end;
     }
 
     public void setCurrent_term_end(String current_term_end) {
-        this.current_term_end = LocalDateTime.parse(current_term_end, formatter);
+        this.current_term_end = current_term_end;
     }
 
     public Status getStatus() {
@@ -107,5 +107,4 @@ public class Subscriptions {
     public void setStatus(String status) {
         this.status = Status.valueOf(status.toUpperCase());
     }
-
 }
