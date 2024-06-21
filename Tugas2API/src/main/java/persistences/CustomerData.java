@@ -8,7 +8,8 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class CustomerData {
-// SELECT ALL CUSTOMERS
+
+    // SELECT ALL CUSTOMERS
     public ArrayList<Customer> selectAllCustomers() throws SQLException {
         Connection connection = null;
         PreparedStatement statement = null;
@@ -140,7 +141,7 @@ public class CustomerData {
                 subscription.setBilling_period(result.getInt("billing_period"));
                 subscription.setBilling_period_unit(result.getString("billing_period_unit"));
                 subscription.setTotal_due(result.getInt("total_due"));
-                subscription.setActivated_at(result.getString("activated_at"));
+                subscription.setActivated_at(result.getInt("activated_at"));
                 subscription.setCurrent_term_start(result.getString("current_term_start"));
                 subscription.setCurrent_term_end(result.getString("current_term_end"));
                 subscription.setStatus(result.getString("status"));
@@ -181,7 +182,7 @@ public class CustomerData {
                 subscription.setBilling_period(result.getInt("billing_period"));
                 subscription.setBilling_period_unit(result.getString("billing_period_unit"));
                 subscription.setTotal_due(result.getInt("total_due"));
-                subscription.setActivated_at(result.getString("activated_at"));
+                subscription.setActivated_at(result.getInt("activated_at"));
                 subscription.setCurrent_term_start(result.getString("current_term_start"));
                 subscription.setCurrent_term_end(result.getString("current_term_end"));
                 subscription.setStatus(result.getString("status"));
