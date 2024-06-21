@@ -1,6 +1,7 @@
 package ardit.com;
 
 public class SubscriptionItems {
+
     // Variables
     private int subscription;
     private int item;
