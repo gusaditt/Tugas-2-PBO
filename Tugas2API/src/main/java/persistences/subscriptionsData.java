@@ -178,9 +178,9 @@ public class subscriptionsData {
         try {
             Class.forName("org.sqlite.JDBC");
             // Establish connection to SQLite database
-            connection = DriverManager.getConnection("jdbc:sqlite:ecommerce.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:subscription.db");
             System.out.println("Connected to database");
-            statement = connection.prepareStatement("INSERT INTO subscriptions (customer, billing_period, billing_period_unit, total_due, activated_at, current_term_start, current_term_end, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            statement = connection.prepareStatement("INSERT INTO subscriptions (customer, billing_period, billing_period_unit, total_due, actived_at, current_term_start, current_term_end, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             statement.setInt(1, subscription.getCustomer());
             statement.setInt(2, subscription.getBilling_period());
             statement.setString(3, subscription.getBilling_period_unit().toString());
