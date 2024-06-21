@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class itemsData {
-// SELECT ALL ITEMS
+    // SELECT ALL ITEMS
     public ArrayList<Items> selectAllItems() throws SQLException {
         Connection connection = null;
         Statement statement = null;
@@ -16,7 +16,7 @@ public class itemsData {
         try {
             Class.forName("org.sqlite.JDBC");
             // Establish connection to SQLite database
-            connection = DriverManager.getConnection("jdbc:sqlite:ecommerce.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:subscription.db");
             System.out.println("Connected to database");
             statement = connection.createStatement();
             result = statement.executeQuery("SELECT * FROM items");
@@ -51,7 +51,7 @@ public class itemsData {
         try {
             Class.forName("org.sqlite.JDBC");
             // Establish connection to SQLite database
-            connection = DriverManager.getConnection("jdbc:sqlite:ecommerce.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:subscription.db");
             System.out.println("Connected to database");
             statement = connection.prepareStatement("SELECT * FROM items WHERE id = ?");
             statement.setInt(1, id);
@@ -85,7 +85,7 @@ public class itemsData {
         try {
             Class.forName("org.sqlite.JDBC");
             // Establish connection to SQLite database
-            connection = DriverManager.getConnection("jdbc:sqlite:ecommerce.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:subscription.db");
             System.out.println("Connected to database");
             statement = connection.prepareStatement("INSERT INTO items (id, name, price, type, is_active) VALUES (?, ?, ?, ?, ?)");
             statement.setInt(1, item.getId());
@@ -113,7 +113,7 @@ public class itemsData {
     }
 
     // UPDATE ITEM BY ID
-    public String updateItem(Items item, int id) throws SQLException {
+    public String updateItems(Items item, int id) throws SQLException {
         Connection connection = null;
         PreparedStatement statement = null;
         String response;
@@ -121,7 +121,7 @@ public class itemsData {
         try {
             Class.forName("org.sqlite.JDBC");
             // Establish connection to SQLite database
-            connection = DriverManager.getConnection("jdbc:sqlite:ecommerce.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:subscription.db");
             System.out.println("Connected to database");
             statement = connection.prepareStatement("UPDATE items SET name = ?, price = ?, type = ?, is_active = ? WHERE id = ?");
             statement.setString(1, item.getName());
@@ -157,7 +157,7 @@ public class itemsData {
         try {
             Class.forName("org.sqlite.JDBC");
             // Establish connection to SQLite database
-            connection = DriverManager.getConnection("jdbc:sqlite:ecommerce.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:subscription.db");
             System.out.println("Connected to database");
 
             // SQL query based on isActive parameter
@@ -196,10 +196,10 @@ public class itemsData {
         try {
             Class.forName("org.sqlite.JDBC");
             // Establish connection to SQLite database
-            connection = DriverManager.getConnection("jdbc:sqlite:ecommerce.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:subscription.db");
             System.out.println("Connected to database");
-            statement = connection.prepareStatement("DELETE FROM items WHERE id = ?");
-            statement.setInt(1, id);
+            statement = connection.prepareStatement("UPDATE items SET is_active = 0 WHERE id = " + id );
+
 
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
@@ -218,5 +218,4 @@ public class itemsData {
         }
         return response;
     }
-
 }
