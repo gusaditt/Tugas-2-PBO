@@ -106,3 +106,14 @@ diakses dengan 'http://localhost:9057/items/2'
 # DELETE_customers_{id}_cards_{id}
 ![19 DELETE _customers_{id}_cards_{id}](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/c6179074-eda4-4d14-98a5-58fdddcf0233)
 diakses dengan 'http://localhost:9057/customers/4/cards/4'
+
+# REQUEST HANDLER tidak ada
+![20 Request Handler Method tidak ada](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/96e98afe-2b4a-45f1-817f-7d3ad4e72b1f)
+
+# CARD NOT FOUND
+**Kartu yang dicari berdasarkan ID tidak terdaftar / tidak ada**
+![Screenshot (439)](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/dec7f413-9144-4b3c-a606-4ea0ce6b2af8)
+
+# 404 Entity Not Found
+**Customer yang dicari tidak ada**
+![Screenshot (440)](https://github.com/gusaditt/Tugas-1-PBO/assets/147296239/ea3895a1-a1b9-4b44-b0eb-1a0a5e74e419)
