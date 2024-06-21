@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class Response {
-    // Method untuk mendapatkan response header,
-    // Mengatur Content type, mengirim respon ke client dan
-    // mengatur status code, response length, dan menulis respon ke output stream
+
     public void getResponse(HttpExchange exchange, String jsonObject, String[] path, String table, int statusCode) throws IOException{
         OutputStream outputstream = exchange.getResponseBody();
         exchange.getResponseHeaders().set("Content-Type","application/json");
@@ -18,11 +16,12 @@ public class Response {
         outputstream.close();
     }
 
-    // Method untuk send response
     public void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
+        byte[] responseBytes = response.getBytes("UTF-8");
+        exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8"); // Tambahkan Content-Type header
+        exchange.sendResponseHeaders(statusCode, responseBytes.length);
         OutputStream outputStream = exchange.getResponseBody();
-        exchange.sendResponseHeaders(statusCode, response.length());
-        outputStream.write(response.getBytes());
+        outputStream.write(responseBytes);
         outputStream.flush();
         outputStream.close();
     }
