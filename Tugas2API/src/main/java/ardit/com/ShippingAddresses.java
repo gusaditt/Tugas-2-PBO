@@ -1,7 +1,8 @@
 package ardit.com;
 
 public class ShippingAddresses {
-// Variables
+
+    // Variables
     private int id;
     private int customer;
     private String title; // nama dari alamat, misalnya: rumah, kantor, rumah 2
