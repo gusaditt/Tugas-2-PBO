@@ -1,7 +1,8 @@
 package ardit.com;
 
 public class Cards {
-  // Variabel
+
+    // Variabel
     private int id;
     private int customer;
     public enum CardType { VISA, MASTERCARD }
