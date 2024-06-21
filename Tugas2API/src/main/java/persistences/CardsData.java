@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class CardsData {
-// SELECT ALL CARDS BASED ON CUSTOMER'S ID
+    // SELECT ALL CARDS BASED ON CUSTOMER'S ID
     public ArrayList<Cards> selectCardsByCustomer(int idCustomer) throws SQLException {
         Connection connection = null;
         PreparedStatement statement = null;
@@ -125,32 +125,56 @@ public class CardsData {
     }
 
     // DELETE CARD
-    public String deleteCard(int idCard) throws SQLException, ClassNotFoundException {
+    public String deleteCard(int customerId, int idCard) throws SQLException {
         Connection connection = null;
-        PreparedStatement statement = null;
+        PreparedStatement selectStatement = null;
+        PreparedStatement deleteStatement = null;
         String response;
 
         try {
             Class.forName("org.sqlite.JDBC");
-            // Establish connection to SQLite database
             connection = DriverManager.getConnection("jdbc:sqlite:subscription.db");
-            System.out.println("Connected to database");
-            statement = connection.prepareStatement("DELETE FROM cards WHERE id = ?");
-            statement.setInt(1, idCard);
-            int rowsAffected = statement.executeUpdate();
-            if (rowsAffected > 0) {
-                response = rowsAffected + " row(s) have been affected";
-                System.out.println(response);
+            System.out.println("Connected to the database");
+
+            // Cek jika kartu adalah primary
+            String selectQuery = "SELECT is_primary FROM cards WHERE id = ? AND customer = ?";
+            selectStatement = connection.prepareStatement(selectQuery);
+            selectStatement.setInt(1, idCard);
+            selectStatement.setInt(2, customerId);
+            ResultSet rs = selectStatement.executeQuery();
+
+            if (rs.next()) {
+                int isPrimary = rs.getInt("is_primary");
+                if (isPrimary == 0) {
+                    // Hapus Card jika tidak primary
+                    String deleteQuery = "DELETE FROM cards WHERE id = ? AND customer = ?";
+                    deleteStatement = connection.prepareStatement(deleteQuery);
+                    deleteStatement.setInt(1, idCard);
+                    deleteStatement.setInt(2, customerId);
+                    int rowsAffected = deleteStatement.executeUpdate();
+
+                    if (rowsAffected > 0) {
+                        response = rowsAffected + " row(s) have been affected";
+                        System.out.println(response);
+                    } else {
+                        response = "No rows have been affected";
+                        System.out.println(response);
+                    }
+                } else {
+                    response = "Cannot delete primary card";
+                    System.out.println(response);
+                }
             } else {
-                response = "No rows have been affected";
+                response = "Card not found";
                 System.out.println(response);
             }
         } catch (SQLException | ClassNotFoundException e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             throw new RuntimeException(e);
         } finally {
-            if (statement != null) statement.close();
-            if (connection != null) connection.close();
+            if (selectStatement != null) selectStatement.close();
+            if (deleteStatement != null) deleteStatement.close();
+            if (connection!= null) connection.close();
         }
         return response;
     }
