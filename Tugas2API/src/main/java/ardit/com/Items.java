@@ -1,7 +1,8 @@
 package ardit.com;
 
 public class Items {
-// Variables
+
+    // Variables
     private int id;
     private String name;
     private int price;
@@ -60,6 +61,4 @@ public class Items {
     public void setIs_active(int is_active) {
         this.is_active = is_active;
     }
-
 }
-
