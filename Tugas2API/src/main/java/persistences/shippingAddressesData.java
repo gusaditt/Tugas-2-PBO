@@ -1,29 +1,30 @@
 package persistences;
 
-import ardit.com.shippingAddresses;
+import ardit.com.ShippingAddresses;
 
 import java.sql.*;
 import java.util.ArrayList;
 
 public class shippingAddressesData {
-// SELECT SHIPPING ADDRESSES BY CUSTOMER ID
-    public ArrayList<shippingAddresses> selectAddressesByCustomer(int idCustomer) throws SQLException {
+
+    // SELECT SHIPPING ADDRESSES BY CUSTOMER ID
+    public ArrayList<ShippingAddresses> selectAddressesByCustomer(int idCustomer) throws SQLException {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet result = null;
-        ArrayList<shippingAddresses> addressList = new ArrayList<>();
+        ArrayList<ShippingAddresses> addressList = new ArrayList<>();
 
         try {
             Class.forName("org.sqlite.JDBC");
             // Establish connection to SQLite database
-            connection = DriverManager.getConnection("jdbc:sqlite:ecommerce.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:subscription.db");
             System.out.println("Connected to database");
-            statement = connection.prepareStatement("SELECT * FROM shipping_addresses WHERE customer = ?");
+            statement = connection.prepareStatement("SELECT * FROM shipping_address WHERE customer = ?");
             statement.setInt(1, idCustomer);
             result = statement.executeQuery();
 
             while(result.next()) {
-                shippingAddresses address = new shippingAddresses();
+                ShippingAddresses address = new ShippingAddresses();
                 address.setId(result.getInt("id"));
                 address.setCustomer(result.getInt("customer"));
                 address.setTitle(result.getString("title"));
@@ -46,7 +47,7 @@ public class shippingAddressesData {
     }
 
     // INSERT NEW SHIPPING ADDRESS
-    public String addNewAddress(shippingAddresses address) throws SQLException {
+    public String addNewAddress(ShippingAddresses address) throws SQLException {
         Connection connection = null;
         PreparedStatement statement = null;
         String response;
@@ -85,7 +86,7 @@ public class shippingAddressesData {
     }
 
     // UPDATE SHIPPING ADDRESS BASED ON ID
-    public String updateAddress(shippingAddresses address, int idAddress) throws SQLException {
+    public String updateAddress(ShippingAddresses address, int idAddress) throws SQLException {
         Connection connection = null;
         PreparedStatement statement = null;
         String response;
@@ -153,6 +154,4 @@ public class shippingAddressesData {
         }
         return response;
     }
-
-
 }
